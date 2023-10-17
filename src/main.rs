@@ -46,5 +46,6 @@ fn build_ui(app: &Application) {
     window.set_layer(Layer::Overlay);
     window.set_margin(Edge::Left, 200);
     window.set_anchor(Edge::Left, true);
+
     window.show();
 }
