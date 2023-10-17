@@ -16,8 +16,8 @@
 // }
 
 use gtk4::prelude::*;
-use gtk4::{glib, Application, ApplicationWindow, Builder};
-use gtk4_layer_shell::{Layer, LayerShell};
+use gtk4::{Application, ApplicationWindow, Builder};
+use gtk4_layer_shell::{Edge, Layer, LayerShell};
 
 //fn main() -> glib::ExitCode {
 fn main() {
@@ -35,10 +35,16 @@ fn main() {
 
 fn build_ui(app: &Application) {
     // https://stackoverflow.com/questions/66942543/how-do-we-build-gui-with-glade-gtk-rs-in-rust
+    // https://github.com/pachi/visol/blob/master/src/window.rs
     let builder = Builder::new();
     builder.add_from_file("src/system.ui").expect("fail");
     let window: ApplicationWindow = builder.object("window").expect("fail2");
+
+    // Prevent the window from closing just after the application starts.
+    window.set_application(Some(app));
     window.init_layer_shell();
     window.set_layer(Layer::Overlay);
+    window.set_margin(Edge::Left, 200);
+    window.set_anchor(Edge::Left, true);
     window.show();
 }
