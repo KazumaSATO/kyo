@@ -2,10 +2,45 @@
 <!-- Created with Cambalache 0.16.0 -->
 <interface>
   <!-- interface-name system.ui -->
-  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.6"/>
   <object class="GtkApplicationWindow" id="window">
     <child>
-      <object class="GtkListBox"/>
+      <object class="GtkListBox" id="list">
+        <child>
+          <object class="GtkBox">
+            <property name="css-classes">entry</property>
+            <property name="css-name">entry</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">doge</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel"/>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <child>
+              <object class="GtkLabel"/>
+            </child>
+            <child>
+              <object class="GtkLabel"/>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <child>
+              <object class="GtkLabel"/>
+            </child>
+            <child>
+              <object class="GtkLabel"/>
+            </child>
+          </object>
+        </child>
+      </object>
     </child>
   </object>
 </interface>
