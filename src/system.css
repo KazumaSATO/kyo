@@ -1,0 +1,26 @@
+.window {
+    background-color: red;
+}
+.entry {
+    background-color: pink;
+    max-width: 10px;
+    border-radius: 0px;
+    /* opacity: 0.3; */
+}
+.subentry {
+    background-color: green;
+    max-width: 10px;
+    border-radius: 0px;    
+}
+
+/* GtkLayout { */
+/*     background-color: transparent; */
+/* } */
+
+/* GtkViewport { */
+/*     backgroun-color: transparent; */
+/* } */
+
+/* .background { */
+/*     background-color: yellow; */
+/* } */

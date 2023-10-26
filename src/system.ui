@@ -8,15 +8,19 @@
       <object class="GtkListBox" id="list">
         <child>
           <object class="GtkBox">
-            <property name="css-classes">entry</property>
-            <property name="css-name">entry</property>
             <child>
               <object class="GtkLabel">
+                <property name="css-classes">entry</property>
+                <property name="css-name">entry</property>
                 <property name="label">doge</property>
               </object>
             </child>
             <child>
-              <object class="GtkLabel"/>
+              <object class="GtkLabel">
+                <property name="css-classes">subentry</property>
+                <property name="css-name">subentry</property>
+                <property name="label">kani</property>
+              </object>
             </child>
           </object>
         </child>
@@ -33,10 +37,11 @@
         <child>
           <object class="GtkBox">
             <child>
-              <object class="GtkLabel"/>
-            </child>
-            <child>
-              <object class="GtkLabel"/>
+              <object class="GtkLabel">
+                <property name="css-classes">entry</property>
+                <property name="css-name">entry</property>
+                <property name="label">doge</property>
+              </object>
             </child>
           </object>
         </child>
