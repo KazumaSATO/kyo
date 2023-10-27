@@ -4,33 +4,26 @@
   <!-- interface-name system.ui -->
   <requires lib="gtk" version="4.6"/>
   <object class="GtkApplicationWindow" id="window">
+    <property name="default-height">800</property>
+    <property name="default-width">600</property>
     <child>
       <object class="GtkListBox" id="list">
         <child>
           <object class="GtkBox">
+            <property name="hexpand">True</property>
             <child>
               <object class="GtkLabel">
                 <property name="css-classes">entry</property>
                 <property name="css-name">entry</property>
-                <property name="label">doge</property>
+                <property name="label"></property>
               </object>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="css-classes">subentry</property>
                 <property name="css-name">subentry</property>
-                <property name="label">kani</property>
+                <property name="label">Lock</property>
               </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <child>
-              <object class="GtkLabel"/>
-            </child>
-            <child>
-              <object class="GtkLabel"/>
             </child>
           </object>
         </child>
@@ -40,7 +33,28 @@
               <object class="GtkLabel">
                 <property name="css-classes">entry</property>
                 <property name="css-name">entry</property>
-                <property name="label">doge</property>
+                <property name="label"></property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">Sleep</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <child>
+              <object class="GtkLabel">
+                <property name="css-classes">entry</property>
+                <property name="css-name">entry</property>
+                <property name="label"></property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">Poweroff</property>
               </object>
             </child>
           </object>

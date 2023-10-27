@@ -52,9 +52,9 @@ fn build_ui(app: &Application) {
     //window.set_opacity(0.1);
     window.init_layer_shell();
     window.set_layer(Layer::Overlay);
-    window.set_margin(Edge::Left, 200);
-    window.set_anchor(Edge::Left, true);
-
+    // window.set_margin(Edge::Left, 200);
+    // window.set_anchor(Edge::Left, true);
+    // Boxは非対称のサイズに子供を指定できるみたい。
     window.show();
 }
 

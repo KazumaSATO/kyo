@@ -3,7 +3,7 @@
 }
 .entry {
     background-color: pink;
-    max-width: 10px;
+    font-size: 24px;
     border-radius: 0px;
     /* opacity: 0.3; */
 }
