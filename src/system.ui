@@ -4,8 +4,7 @@
   <!-- interface-name system.ui -->
   <requires lib="gtk" version="4.6"/>
   <object class="GtkApplicationWindow" id="window">
-    <property name="default-height">800</property>
-    <property name="default-width">600</property>
+    <property name="default-width">400</property>
     <child>
       <object class="GtkListBox" id="list">
         <child>
