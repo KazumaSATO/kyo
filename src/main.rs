@@ -17,8 +17,11 @@
 //use gdk4::prelude::*;
 use gdk4::Display;
 use gtk4::prelude::*;
-use gtk4::{Application, ApplicationWindow, Builder, CssProvider, ListBox};
-use gtk4_layer_shell::{Edge, Layer, LayerShell};
+use gtk4::{
+    Application, ApplicationWindow, Builder, CallbackAction, CssProvider, ListBox, Shortcut,
+    ShortcutController, ShortcutTrigger,
+};
+use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 
 //fn main() -> glib::ExitCode {
 fn main() {
@@ -51,10 +54,22 @@ fn build_ui(app: &Application) {
     window.set_application(Some(app));
     //window.set_opacity(0.1);
     window.init_layer_shell();
+    window.set_keyboard_mode(KeyboardMode::Exclusive);
     window.set_layer(Layer::Overlay);
     // window.set_margin(Edge::Left, 200);
     // window.set_anchor(Edge::Left, true);
     // Boxは非対称のサイズに子供を指定できるみたい。
+    let shortcut_controller = ShortcutController::new();
+    let trigger = ShortcutTrigger::parse_string("Escape").unwrap();
+    let shortcut = Shortcut::builder()
+        .trigger(&trigger)
+        .action(&CallbackAction::new(move |_, b| {
+            println!("doge");
+            true
+        }))
+        .build();
+    shortcut_controller.add_shortcut(shortcut);
+    window.add_controller(shortcut_controller);
     window.show();
 }
 
