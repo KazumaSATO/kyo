@@ -22,6 +22,7 @@ use gtk4::{
     ShortcutController, ShortcutTrigger,
 };
 use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
+use std::sync::mpsc;
 
 //fn main() -> glib::ExitCode {
 fn main() {
@@ -54,7 +55,7 @@ fn build_ui(app: &Application) {
     window.set_application(Some(app));
     //window.set_opacity(0.1);
     window.init_layer_shell();
-    window.set_keyboard_mode(KeyboardMode::Exclusive);
+    window.set_keyboard_mode(KeyboardMode::OnDemand);
     window.set_layer(Layer::Overlay);
     // window.set_margin(Edge::Left, 200);
     // window.set_anchor(Edge::Left, true);
