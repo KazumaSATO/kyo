@@ -1,21 +1,24 @@
 use gdk4::Display;
-
-use glib::{clone, source, ControlFlow, MainContext};
+use glib::{clone, source, ControlFlow, ExitCode, MainContext};
 use gtk4::prelude::*;
 use gtk4::{
     glib, Application, ApplicationWindow, Builder, CallbackAction, CssProvider, ListBox, Shortcut,
     ShortcutController, ShortcutTrigger,
 };
 use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
+use std::env;
 use std::sync::mpsc;
+use style::load_css;
 
+pub mod style;
 //fn main() -> glib::ExitCode {
 fn main() {
     // Create a new application
     let app = Application::builder()
         .application_id("dev.nryotaro.kanami")
         .build();
-    app.connect_startup(|_| load_css());
+
+    app.connect_startup(|_| load_css(&None));
     // Connect to "activate" signal of `app`
     app.connect_activate(build_ui);
 
@@ -80,15 +83,4 @@ fn build_ui(app: &Application) {
 
     println!("present");
     //window.show();
-}
-
-fn load_css() {
-    let provider = CssProvider::new();
-    provider.load_from_data(include_str!("system.css"));
-
-    gtk4::style_context_add_provider_for_display(
-        &Display::default().expect("Could not connect to a display."),
-        &provider,
-        gtk4::STYLE_PROVIDER_PRIORITY_APPLICATION,
-    );
 }
