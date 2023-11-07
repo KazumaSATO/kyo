@@ -10,6 +10,7 @@ use std::env;
 use std::sync::mpsc;
 use style::load_css;
 
+pub mod config;
 pub mod style;
 //fn main() -> glib::ExitCode {
 fn main() {
