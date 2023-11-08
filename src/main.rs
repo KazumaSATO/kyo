@@ -1,3 +1,4 @@
+use config::{load_config, Config};
 use gdk4::Display;
 use glib::{clone, source, ControlFlow, ExitCode, MainContext};
 use gtk4::prelude::*;
@@ -6,8 +7,6 @@ use gtk4::{
     ShortcutController, ShortcutTrigger,
 };
 use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
-use std::env;
-use std::sync::mpsc;
 use style::load_css;
 
 pub mod config;
@@ -20,14 +19,15 @@ fn main() {
         .build();
 
     app.connect_startup(|_| load_css(&None));
+
     // Connect to "activate" signal of `app`
-    app.connect_activate(build_ui);
+    app.connect_activate(|app| build_ui(&app, &load_config(None)));
 
     // Run the application
     app.run();
 }
 
-fn build_ui(app: &Application) {
+fn build_ui(app: &Application, config: &Config) {
     // https://stackoverflow.com/questions/66942543/how-do-we-build-gui-with-glade-gtk-rs-in-rust
     // https://github.com/pachi/visol/blob/master/src/window.rs
     let builder = Builder::new();
