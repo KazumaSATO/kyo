@@ -31,8 +31,7 @@ fn build_ui(app: &Application, config: &Config) {
     // https://stackoverflow.com/questions/66942543/how-do-we-build-gui-with-glade-gtk-rs-in-rust
     // https://github.com/pachi/visol/blob/master/src/window.rs
     let builder = Builder::new();
-
-    builder.add_from_file("src/system.ui").expect("fail");
+    builder.add_from_string(include_str!("system.ui")).unwrap();
     let window: ApplicationWindow = builder.object("window").expect("fail2");
     let list: ListBox = builder.object("list").expect("fail3");
     list.connect_row_activated(move |_list_box, _option_list_box| {
@@ -82,6 +81,5 @@ fn build_ui(app: &Application, config: &Config) {
         glib::ControlFlow::Continue
     });
 
-    println!("present");
     //window.show();
 }
