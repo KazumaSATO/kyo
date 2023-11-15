@@ -1,4 +1,4 @@
-use config::{load_config, Config};
+use config::{load_config, Commands};
 use gdk4::Display;
 use glib::{clone, source, ControlFlow, ExitCode, MainContext};
 use gtk4::prelude::*;
@@ -27,9 +27,10 @@ fn main() {
     app.run();
 }
 
-fn build_ui(app: &Application, config: &Config) {
+fn build_ui(app: &Application, config: &Commands) {
     // https://stackoverflow.com/questions/66942543/how-do-we-build-gui-with-glade-gtk-rs-in-rust
     // https://github.com/pachi/visol/blob/master/src/window.rs
+
     let builder = Builder::new();
     builder.add_from_string(include_str!("system.ui")).unwrap();
     let window: ApplicationWindow = builder.object("window").expect("fail2");

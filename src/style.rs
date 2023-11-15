@@ -13,7 +13,7 @@ pub fn load_css(option: &Option<String>) {
                 .join(".config")
                 .join("kanami")
                 .join("style.css");
-            let path = if user_path.exists() {
+            let path = if !user_path.exists() {
                 Path::new("/etc").join("kanami").join("style.css")
             } else {
                 user_path
