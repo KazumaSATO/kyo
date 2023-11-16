@@ -4,18 +4,6 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::path::Path;
 
-#[derive(Deserialize)]
-struct ConfigFile {
-    commands: ConfigFileCommands,
-}
-
-#[derive(Deserialize)]
-struct ConfigFileCommands {
-    sleep: Option<String>,
-    poweroff: Option<String>,
-    lock: Option<String>,
-}
-
 #[derive(PartialEq, Debug)]
 pub struct Commands {
     sleep: Vec<String>,
@@ -43,6 +31,19 @@ pub fn load_config(option: Option<&Path>) -> Commands {
     let config: ConfigFile = toml::from_str(toml_str.as_str()).unwrap();
     interpret_commands(&config)
 }
+
+#[derive(Deserialize)]
+struct ConfigFile {
+    commands: ConfigFileCommands,
+}
+
+#[derive(Deserialize)]
+struct ConfigFileCommands {
+    sleep: Option<String>,
+    poweroff: Option<String>,
+    lock: Option<String>,
+}
+
 fn read_file(path: &Path) -> String {
     let error_message = format!("Failed to read {}.", path.display());
     let file = File::open(path).expect(error_message.as_str());

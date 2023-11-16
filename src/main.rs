@@ -40,6 +40,7 @@ fn build_ui(app: &Application, config: &Commands) {
     });
     // Prevent the window from closing just after the application starts.
     window.set_application(Some(app));
+
     //window.set_opacity(0.1);
     window.init_layer_shell();
     window.set_keyboard_mode(KeyboardMode::OnDemand);

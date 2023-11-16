@@ -7,6 +7,7 @@
     <property name="default-width">400</property>
     <child>
       <object class="GtkListBox" id="list">
+        <property name="css-name">list</property>
         <child>
           <object class="GtkBox">
             <property name="hexpand">True</property>
@@ -27,7 +28,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="entry">
             <child>
               <object class="GtkLabel">
                 <property name="css-classes">entry</property>
@@ -54,6 +55,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="label">Poweroff</property>
+                <property name="name">poweroff</property>
               </object>
             </child>
           </object>
