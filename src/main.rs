@@ -1,10 +1,12 @@
 use config::{load_config, Commands};
-use gdk4::Display;
-use glib::{clone, source, ControlFlow, ExitCode, MainContext};
+use gdk4::{Display, Texture};
+
+use gdk_pixbuf::{Colorspace, Pixbuf};
+use glib::{clone, source, Bytes, ControlFlow, ExitCode, MainContext};
 use gtk4::prelude::*;
 use gtk4::{
-    glib, Application, ApplicationWindow, Builder, CallbackAction, CssProvider, ListBox, Shortcut,
-    ShortcutController, ShortcutTrigger,
+    gdk_pixbuf, glib, Application, ApplicationWindow, Builder, CallbackAction, CssProvider, Image,
+    ListBox, Shortcut, ShortcutController, ShortcutTrigger,
 };
 use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 use style::load_css;
@@ -35,6 +37,15 @@ fn build_ui(app: &Application, config: &Commands) {
     builder.add_from_string(include_str!("system.ui")).unwrap();
     let window: ApplicationWindow = builder.object("window").expect("fail2");
     let list: ListBox = builder.object("list").expect("fail3");
+
+    let sleep = include_bytes!("sleep.svg");
+
+    let sleep_bytes = Bytes::from_static(sleep);
+
+    let sleep_texture = Texture::from_bytes(&sleep_bytes).unwrap();
+    //let image = Image::from_paintable(Some(&sleep_texture));
+    let image: Image = builder.object("sleep_icon").unwrap();
+    image.set_paintable(Some(&sleep_texture));
     list.connect_row_activated(move |_list_box, _option_list_box| {
         println!("doge");
     });

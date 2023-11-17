@@ -28,7 +28,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="entry">
+          <object class="GtkBox">
             <child>
               <object class="GtkLabel">
                 <property name="css-classes">entry</property>
@@ -56,6 +56,21 @@
               <object class="GtkLabel">
                 <property name="label">Poweroff</property>
                 <property name="name">poweroff</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="name">elf</property>
+            <child>
+              <object class="GtkImage" id="sleep_icon">
+                <property name="name">elf_image</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">Elf</property>
               </object>
             </child>
           </object>
