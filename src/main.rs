@@ -38,14 +38,15 @@ fn build_ui(app: &Application, config: &Commands) {
     let window: ApplicationWindow = builder.object("window").expect("fail2");
     let list: ListBox = builder.object("list").expect("fail3");
 
-    let sleep = include_bytes!("sleep.svg");
-
-    let sleep_bytes = Bytes::from_static(sleep);
+    let sleep = include_str!("sleep.svg");
+    let colored = sleep.replace("#000000", "#aaaaaa");
+    let sleep_bytes = Bytes::from(colored.as_bytes());
 
     let sleep_texture = Texture::from_bytes(&sleep_bytes).unwrap();
     //let image = Image::from_paintable(Some(&sleep_texture));
     let image: Image = builder.object("sleep_icon").unwrap();
     image.set_paintable(Some(&sleep_texture));
+    image.set_pixel_size(50);
     list.connect_row_activated(move |_list_box, _option_list_box| {
         println!("doge");
     });
