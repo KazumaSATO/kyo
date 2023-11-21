@@ -12,7 +12,7 @@ pub struct Config {
 }
 
 #[derive(PartialEq, Debug)]
-pub struct Command {
+struct Command {
     command: String,
     icon: Option<String>,
 }
@@ -32,7 +32,7 @@ pub fn load_config(option: Option<&Path>) -> Config {
         }
     };
     let config: ConfigFile = toml::from_str(toml_str.as_str()).unwrap();
-    interpret_config(&config)
+    interpret_config(config)
 }
 
 #[derive(Deserialize)]
@@ -60,11 +60,11 @@ fn read_file(path: &Path) -> String {
     dest
 }
 
-fn as_command(default_command: &str, raw: &Option<RawCommand>) -> Command {
+fn as_command(default_command: &str, raw: Option<RawCommand>) -> Command {
     match raw {
-        Some(a) => Command {
-            command: a.command.unwrap_or(String::from(default_command)),
-            icon: a.icon,
+        Some(raw_command) => Command {
+            command: raw_command.command.unwrap_or(String::from(default_command)),
+            icon: raw_command.icon,
         },
         None => Command {
             command: String::from(default_command),
@@ -73,11 +73,11 @@ fn as_command(default_command: &str, raw: &Option<RawCommand>) -> Command {
     }
 }
 
-fn interpret_config(config: &ConfigFile) -> Config {
+fn interpret_config(config: ConfigFile) -> Config {
     Config {
-        sleep: as_command("loginctl suspend", &config.sleep),
-        lock: as_command("swaylock", &config.lock),
-        poweroff: as_command("loginctl poweroff", &config.poweroff),
+        sleep: as_command("loginctl suspend", config.sleep),
+        lock: as_command("swaylock", config.lock),
+        poweroff: as_command("loginctl poweroff", config.poweroff),
     }
 }
 

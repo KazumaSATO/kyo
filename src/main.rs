@@ -1,4 +1,4 @@
-use config::{load_config, Commands};
+use config::{load_config, Config};
 use gdk4::{Display, Texture};
 
 use gdk_pixbuf::{Colorspace, Pixbuf};
@@ -13,6 +13,7 @@ use style::load_css;
 
 pub mod config;
 pub mod style;
+pub mod ui;
 //fn main() -> glib::ExitCode {
 fn main() {
     // Create a new application
@@ -23,13 +24,13 @@ fn main() {
     app.connect_startup(|_| load_css(&None));
 
     // Connect to "activate" signal of `app`
-    app.connect_activate(|app| build_ui(&app, &load_config(None)));
+    app.connect_activate(|app| ui::build_ui(&app, &load_config(None)));
 
     // Run the application
     app.run();
 }
 
-fn build_ui(app: &Application, config: &Commands) {
+fn build_ui2(app: &Application, config: &Config) {
     // https://stackoverflow.com/questions/66942543/how-do-we-build-gui-with-glade-gtk-rs-in-rust
     // https://github.com/pachi/visol/blob/master/src/window.rs
 
