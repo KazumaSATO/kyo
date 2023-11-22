@@ -6,14 +6,14 @@ use std::path::Path;
 
 #[derive(PartialEq, Debug)]
 pub struct Config {
-    sleep: Command,
-    poweroff: Command,
-    lock: Command,
+    pub sleep: Command,
+    pub poweroff: Command,
+    pub lock: Command,
 }
 
 #[derive(PartialEq, Debug)]
-struct Command {
-    command: String,
+pub struct Command {
+    pub command: String,
     icon: Option<String>,
 }
 

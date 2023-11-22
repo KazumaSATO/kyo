@@ -1,22 +1,24 @@
-use crate::config::Config;
+use crate::config::{Command, Config};
+use gdk4::Texture;
 use gtk4::glib::source::Priority;
-use gtk4::glib::{ControlFlow, MainContext, Receiver, Sender};
+use gtk4::glib::{Bytes, ControlFlow, MainContext, Receiver, Sender};
 use gtk4::prelude::*;
 use gtk4::{
-    Application, CallbackAction, ListBox, Shortcut, ShortcutController, ShortcutTrigger, Window,
+    Application, Box, CallbackAction, GestureClick, Image, Label, ListBox, Orientation, Shortcut,
+    ShortcutController, ShortcutTrigger, Window,
 };
 use gtk4_layer_shell::{KeyboardMode, Layer, LayerShell};
 //pub mod config;
 
 pub fn build_ui(app: &Application, config: &Config) {
     let window = build_window(app);
-    let list_box = build_list();
+    let list_box = build_list(config);
     window.set_child(Some(&list_box));
 
     let (sender, receiver): (Sender<Message>, Receiver<Message>) =
         MainContext::channel::<Message>(Priority::DEFAULT);
 
-    let shortcut_controller = build_shortcut_controller(&window, sender);
+    let shortcut_controller = build_shortcut_controller(sender);
     window.add_controller(shortcut_controller);
     window.present();
     receiver.attach(None, move |msg| {
@@ -42,27 +44,44 @@ fn build_window(app: &Application) -> Window {
     window
 }
 
-fn build_list() -> ListBox {
+fn build_list(config: &Config) -> ListBox {
     let builder = ListBox::builder();
-    builder.build()
+    let list_box = builder.build();
+
+    let models = vec![
+        ("lock", include_str!("lock.svg"), &config.lock),
+        ("sleep", include_str!("sleep.svg"), &config.sleep),
+        ("Poweroff", include_str!("poweroff.svg"), &config.poweroff),
+    ];
+    for (label, icon, command) in models {
+        list_box.append(&build_entry(label, icon, command));
+    }
+    list_box
+}
+fn build_entry(label: &str, icon: &str, command: &Command) -> Box {
+    let bx = Box::new(Orientation::Horizontal, 20);
+    let bytes = Bytes::from(icon.as_bytes());
+    let texture = Texture::from_bytes(&bytes).unwrap();
+    let image = Image::from_paintable(Some(&texture));
+    image.set_pixel_size(32);
+    bx.append(&image);
+    bx.append(&Label::new(Some(label)));
+    let click_controller = GestureClick::new();
+    let a = String::from(&command.command);
+    click_controller.connect_pressed(move |_, _, _, _| {
+        println!("{}", &a);
+    });
+
+    bx.add_controller(click_controller);
+    bx
 }
 
-fn build_shortcut_controller<'a>(
-    window: &'a Window,
-    sender: Sender<Message>,
-) -> ShortcutController {
+fn build_shortcut_controller<'a>(sender: Sender<Message>) -> ShortcutController {
     let shortcut_controller = ShortcutController::new();
-    // let (sender, receiver): (Sender<Message>, Receiver<Message>) =
-    //     MainContext::channel::<Message>(Priority::DEFAULT);
-
     shortcut_controller.add_shortcut(build_shortcut_escape(sender.clone()));
-    // receiver.attach(None, |x| {
-    //     window.close();
-    //     ControlFlow::Continue
-    // });
     shortcut_controller
 }
-//#[derive(Copy, Clone)]
+
 enum Message {
     CloseWindow,
 }
@@ -75,11 +94,4 @@ fn build_shortcut_escape(sender: Sender<Message>) -> Shortcut {
     let builder = Shortcut::builder().trigger(&trigger).action(&action);
 
     builder.build()
-}
-
-fn message_handler<'a>(window: &'a Window) -> impl FnMut(Message) -> ControlFlow + 'a {
-    |x| {
-        window.close();
-        ControlFlow::Continue
-    }
 }
