@@ -20,12 +20,9 @@ fn main() {
     let app = Application::builder()
         .application_id("dev.nryotaro.kanami")
         .build();
-
     app.connect_startup(|_| load_css(&None));
-
     // Connect to "activate" signal of `app`
     app.connect_activate(|app| ui::build_ui(&app, &load_config(None)));
-
     // Run the application
     app.run();
 }

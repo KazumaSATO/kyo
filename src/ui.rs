@@ -36,6 +36,8 @@ fn build_window(app: &Application) -> Window {
     window.set_keyboard_mode(KeyboardMode::OnDemand);
     //window.set_layer(Layer::Overlay);
     window.set_layer(Layer::Top);
+    window.set_default_width(240);
+    window.set_property("name", "window");
     // window.set_margin(Edge::Left, 200);
     // window.set_anchor(Edge::Left, true);
     // Boxは非対称のサイズに子供を指定できるみたい。
@@ -49,8 +51,8 @@ fn build_list(config: &Config) -> ListBox {
     let list_box = builder.build();
 
     let models = vec![
-        ("lock", include_str!("lock.svg"), &config.lock),
-        ("sleep", include_str!("sleep.svg"), &config.sleep),
+        ("Lock", include_str!("lock.svg"), &config.lock),
+        ("Sleep", include_str!("sleep.svg"), &config.sleep),
         ("Poweroff", include_str!("poweroff.svg"), &config.poweroff),
     ];
     for (label, icon, command) in models {
@@ -59,19 +61,20 @@ fn build_list(config: &Config) -> ListBox {
     list_box
 }
 fn build_entry(label: &str, icon: &str, command: &Command) -> Box {
-    let bx = Box::new(Orientation::Horizontal, 20);
+    let bx = Box::new(Orientation::Horizontal, 16);
     let bytes = Bytes::from(icon.as_bytes());
     let texture = Texture::from_bytes(&bytes).unwrap();
     let image = Image::from_paintable(Some(&texture));
-    image.set_pixel_size(32);
+    image.set_pixel_size(24);
     bx.append(&image);
     bx.append(&Label::new(Some(label)));
     let click_controller = GestureClick::new();
     let a = String::from(&command.command);
     click_controller.connect_pressed(move |_, _, _, _| {
         println!("{}", &a);
+        //emit_move_focus(&self, direction: DirectionType);
     });
-
+    bx.set_property("name", "entry");
     bx.add_controller(click_controller);
     bx
 }
