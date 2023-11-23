@@ -15,20 +15,20 @@ pub fn build_ui(app: &Application, config: &Config) {
     let list_box = build_list(config);
     window.set_child(Some(&list_box));
 
-    let (sender, receiver): (Sender<Message>, Receiver<Message>) =
-        MainContext::channel::<Message>(Priority::DEFAULT);
+    // let (sender, receiver): (Sender<Message>, Receiver<Message>) =
+    //     MainContext::channel::<Message>(Priority::DEFAULT);
 
-    let shortcut_controller = build_shortcut_controller(sender);
-    window.add_controller(shortcut_controller);
+    // let shortcut_controller = build_shortcut_controller(sender);
+    // window.add_controller(shortcut_controller);
     window.present();
-    receiver.attach(None, move |msg| {
-        match msg {
-            Message::CloseWindow => window.close(),
-            Message::Move(direction) => list_box.emit_move_focus(direction),
-        }
+    // receiver.attach(None, move |msg| {
+    //     match msg {
+    //         Message::CloseWindow => window.close(),
+    //         Message::Move(direction) => list_box.emit_move_focus(direction),
+    //     }
 
-        ControlFlow::Continue
-    });
+    //     ControlFlow::Continue
+    // });
 }
 
 fn build_window(app: &Application) -> Window {
@@ -41,12 +41,22 @@ fn build_window(app: &Application) -> Window {
     //window.set_layer(Layer::Overlay);
     window.set_layer(Layer::Top);
     window.set_default_width(240);
-    window.set_property("name", "window");
     // window.set_margin(Edge::Left, 200);
     // window.set_anchor(Edge::Left, true);
     // Boxは非対称のサイズに子供を指定できるみたい。
-
     //builder.add_from_string(include_str!("system.ui")).unwrap();
+    window.set_property("name", "window");
+    let trigger = ShortcutTrigger::parse_string("Escape").unwrap();
+    let action = CallbackAction::new(move |widget, _| {
+        let window: &Window = widget.downcast_ref().unwrap();
+        window.close();
+        true
+    });
+    let builder = Shortcut::builder().trigger(&trigger).action(&action);
+    let controller = ShortcutController::new();
+    controller.add_shortcut(builder.build());
+
+    window.add_controller(controller);
     window
 }
 
@@ -62,28 +72,29 @@ fn build_list(config: &Config) -> ListBox {
     for (label, icon, command) in models {
         list_box.append(&build_entry(label, icon, command));
     }
-    let trigger = ShortcutTrigger::parse_string("<Control>p").unwrap();
-    //let trigger2 = ShortcutTrigger::parse_string("Up").unwrap();
-
-    list_box.connect_move_focus(|_, a| {
-        println!("focus: {}", a);
-        // https://github.com/gtk-rs/examples/blob/master/src/bin/listbox_model.rs
-    });
-    let action = CallbackAction::new(move |widget, _| {
+    let shortcut_controller = ShortcutController::new();
+    let ctrl_p_trigger = ShortcutTrigger::parse_string("<Control>p").unwrap();
+    let ctrl_p_action = CallbackAction::new(move |widget, _| {
         let list_box: &ListBox = widget.downcast_ref().unwrap();
-        println!("{}", list_box.selected_rows().len());
         list_box.emit_move_focus(DirectionType::TabBackward);
-        //list_box.prev();
-        //list_box.set_focus_child(Some(&list_box.row_at_index(2).unwrap()));
         true
     });
-    let builder = Shortcut::builder()
-        .trigger(&trigger)
-        .trigger(&trigger)
-        .action(&action);
-
-    let shortcut_controller = ShortcutController::new();
-    shortcut_controller.add_shortcut(builder.build());
+    let ctrl_p_shortcut = Shortcut::builder()
+        .trigger(&ctrl_p_trigger)
+        .action(&ctrl_p_action)
+        .build();
+    shortcut_controller.add_shortcut(ctrl_p_shortcut);
+    let ctrl_n_trigger = ShortcutTrigger::parse_string("<Control>n").unwrap();
+    let ctrl_n_action = CallbackAction::new(move |widget, _| {
+        let list_box: &ListBox = widget.downcast_ref().unwrap();
+        list_box.emit_move_focus(DirectionType::TabForward);
+        true
+    });
+    let ctrl_n_shortcut = Shortcut::builder()
+        .trigger(&ctrl_n_trigger)
+        .action(&ctrl_n_action)
+        .build();
+    shortcut_controller.add_shortcut(ctrl_n_shortcut);
     list_box.add_controller(shortcut_controller);
     list_box
 }
