@@ -3,17 +3,18 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::path::Path;
+use std::process::{Command as Cmd, Output};
 
 #[derive(PartialEq, Debug)]
 pub struct Config {
-    pub sleep: Command,
-    pub poweroff: Command,
-    pub lock: Command,
+    sleep: Command,
+    poweroff: Command,
+    lock: Command,
 }
 
 #[derive(PartialEq, Debug)]
 pub struct Command {
-    pub command: String,
+    command: String,
     icon: Option<String>,
 }
 
@@ -78,6 +79,22 @@ fn interpret_config(config: ConfigFile) -> Config {
         sleep: as_command("loginctl suspend", config.sleep),
         lock: as_command("swaylock", config.lock),
         poweroff: as_command("loginctl poweroff", config.poweroff),
+    }
+}
+
+impl Config {
+    pub fn run_lock(&self) {
+        self.run(&self.lock.command)
+    }
+    pub fn run_sleep(&self) {}
+    pub fn run_poweroff(&self) {}
+
+    fn run(&self, command: &String) {
+        Cmd::new("sh")
+            .arg("-c")
+            .arg(command)
+            .output()
+            .expect("failed to execute process");
     }
 }
 

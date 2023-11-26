@@ -8,8 +8,8 @@ use gtk4::glib::{Bytes, ControlFlow, MainContext, Receiver, Sender};
 use gtk4::prelude::*;
 use gtk4::{
     Application, ApplicationWindow, CallbackAction, DirectionType, EventControllerKey,
-    GestureClick, Image, Label, ListBox, ListBoxRow, Orientation, Shortcut, ShortcutController,
-    ShortcutTrigger, Window,
+    GestureClick, Image, Label, ListBox, ListBoxRow, Orientation, SelectionMode, Shortcut,
+    ShortcutController, ShortcutTrigger, Window,
 };
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
@@ -70,16 +70,18 @@ fn build_window(app: &Application) -> ApplicationWindow {
 }
 
 fn build_list(config: &Config) -> ListBox {
-    let builder = ListBox::builder();
+    let builder = ListBox::builder()
+        .activate_on_single_click(true)
+        .selection_mode(SelectionMode::None);
     let list_box = builder.build();
 
     let models = vec![
-        ("Lock", include_str!("lock.svg"), &config.lock),
-        ("Sleep", include_str!("sleep.svg"), &config.sleep),
-        ("Poweroff", include_str!("poweroff.svg"), &config.poweroff),
+        ("Lock", include_str!("lock.svg")),
+        ("Sleep", include_str!("sleep.svg")),
+        ("Poweroff", include_str!("poweroff.svg")),
     ];
-    for (label, icon, command) in models {
-        list_box.append(&build_entry(label, icon, command));
+    for (label, icon) in models {
+        list_box.append(&build_entry(label, icon));
     }
     let shortcut_controller = ShortcutController::new();
     let ctrl_p_trigger = ShortcutTrigger::parse_string("<Control>p").unwrap();
@@ -114,9 +116,12 @@ fn build_list(config: &Config) -> ListBox {
     controller_key.connect_key_pressed(move |k, key, c, modifier_type| {
         // Enter
         if c == 36 {
-            sender.send(()).unwrap();
+            //sender.send(()).unwrap();
         }
         Propagation::Proceed
+    });
+    list_box.connect_row_activated(|_, _| {
+        println!("foobar");
     });
     list_box.add_controller(controller_key);
     receiver.attach(
@@ -133,7 +138,7 @@ fn build_list(config: &Config) -> ListBox {
     list_box
 }
 
-fn build_entry(label: &str, icon: &str, command: &Command) -> gtk4::Box {
+fn build_entry(label: &str, icon: &str) -> ListBoxRow {
     let bx = gtk4::Box::new(Orientation::Horizontal, 16);
     let bytes = Bytes::from(icon.as_bytes());
     let texture = Texture::from_bytes(&bytes).unwrap();
@@ -141,16 +146,23 @@ fn build_entry(label: &str, icon: &str, command: &Command) -> gtk4::Box {
     image.set_pixel_size(24);
     bx.append(&image);
     bx.append(&Label::new(Some(label)));
-    let click_controller = GestureClick::new();
-    //bx.add_css_class("entry");
-    let a = String::from(&command.command);
-    click_controller.connect_pressed(move |_, _, _, _| {
-        println!("{}", &a);
-        //emit_move_focus(&self, direction: DirectionType);
-    });
+    // let click_controller = GestureClick::new();
+    // //bx.add_css_class("entry");
+    // click_controller.connect_pressed(move |_, _, _, _| {
+    //     //emit_move_focus(&self, direction: DirectionType);
+    // });
+    // bx.add_controller(click_controller);
     bx.set_property("name", "entry");
-    bx.add_controller(click_controller);
-    bx
+    let builder = ListBoxRow::builder();
+    let row = builder.child(&bx).build();
+    row.connect_activate(|a| {
+        println!("doge");
+    });
+    row.set_property("a", 3);
+    //let c: i32 = row.property("a");
+    //println!("{}", c);
+    row
+    //bx
 }
 
 trait Entries {
