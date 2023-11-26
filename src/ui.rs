@@ -70,9 +70,7 @@ fn build_window(app: &Application) -> ApplicationWindow {
 }
 
 fn build_list(config: &Config) -> ListBox {
-    let builder = ListBox::builder()
-        .activate_on_single_click(true)
-        .selection_mode(SelectionMode::None);
+    let builder = ListBox::builder();
     let list_box = builder.build();
 
     let models = vec![
@@ -120,8 +118,9 @@ fn build_list(config: &Config) -> ListBox {
         }
         Propagation::Proceed
     });
-    list_box.connect_row_activated(|_, _| {
-        println!("foobar");
+    list_box.connect_row_activated(|list_box, row| {
+        let index = row.index();
+        println!("foobar {}", index);
     });
     list_box.add_controller(controller_key);
     receiver.attach(
@@ -155,14 +154,10 @@ fn build_entry(label: &str, icon: &str) -> ListBoxRow {
     bx.set_property("name", "entry");
     let builder = ListBoxRow::builder();
     let row = builder.child(&bx).build();
-    row.connect_activate(|a| {
-        println!("doge");
-    });
-    row.set_property("a", 3);
-    //let c: i32 = row.property("a");
-    //println!("{}", c);
+    // row.connect_activate(|a| {
+    //     println!("doge");
+    // });
     row
-    //bx
 }
 
 trait Entries {
