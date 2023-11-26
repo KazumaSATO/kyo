@@ -10,12 +10,19 @@ pub fn load_css(option: &Option<String>) {
         None => {
             let home = env::var("HOME").expect("HOME was not set.");
             let user_path = Path::new(&home).join(".config/kanami/style.css");
-            let path = if !user_path.exists() {
-                Path::new("/etc").join("kanami/style.css")
+            let path = if user_path.exists() {
+                Some(user_path)
             } else {
-                user_path
+                let default = Path::new("/etc").join("kanami/style.css");
+                if default.exists() {
+                    Some(default)
+                } else {
+                    None
+                }
             };
-            provider.load_from_path(path);
+            if let Some(a) = path {
+                provider.load_from_path(a);
+            }
         }
     };
 

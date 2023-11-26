@@ -5,11 +5,10 @@ use gtk4::glib::Bytes;
 use gtk4::prelude::*;
 use gtk4::{
     Application, ApplicationWindow, CallbackAction, DirectionType, Image, Label, ListBox,
-    ListBoxRow, Orientation, Shortcut, ShortcutController, ShortcutTrigger,
+    Orientation, Shortcut, ShortcutController, ShortcutTrigger,
 };
 
 use gtk4_layer_shell::{KeyboardMode, Layer, LayerShell};
-//pub mod config;
 
 pub fn build_ui(app: &Application, config: Config) {
     let window = build_window(app);
@@ -25,7 +24,6 @@ fn build_window(app: &Application) -> ApplicationWindow {
     window.set_keyboard_mode(KeyboardMode::OnDemand);
     window.set_layer(Layer::Top);
     window.set_default_width(240);
-    window.set_property("name", "window");
     let trigger = ShortcutTrigger::parse_string("Escape").unwrap();
     let action = CallbackAction::new(move |widget, _| {
         widget.activate_action("win.close", None).unwrap();
@@ -47,12 +45,12 @@ fn build_window(app: &Application) -> ApplicationWindow {
 fn build_list(config: Config) -> ListBox {
     let list_box = ListBox::builder().name("list").build();
     let models = vec![
-        ("Lock", include_str!("lock.svg")),
-        ("Sleep", include_str!("sleep.svg")),
-        ("Poweroff", include_str!("poweroff.svg")),
+        ("Lock", include_str!("lock.svg"), "lock"),
+        ("Sleep", include_str!("sleep.svg"), "sleep"),
+        ("Poweroff", include_str!("poweroff.svg"), "poweroff"),
     ];
-    for (label, icon) in models {
-        list_box.append(&build_entry(label, icon));
+    for (label, icon, css_id) in models {
+        list_box.append(&build_entry(label, icon, css_id));
     }
     let shortcut_controller = ShortcutController::new();
     for (key, direction) in [
@@ -75,7 +73,8 @@ fn build_list(config: Config) -> ListBox {
     list_box
 }
 
-fn build_entry(label: &str, icon: &str) -> gtk4::Box {
+//fn build_entry(label: &str, icon: &str) -> gtk4::ListBoxRow {
+fn build_entry(label: &str, icon: &str, css_id: &str) -> gtk4::Box {
     let bx = gtk4::Box::new(Orientation::Horizontal, 16);
     let bytes = Bytes::from(icon.as_bytes());
     let texture = Texture::from_bytes(&bytes).unwrap();
@@ -83,7 +82,7 @@ fn build_entry(label: &str, icon: &str) -> gtk4::Box {
     image.set_pixel_size(24);
     bx.append(&image);
     bx.append(&Label::new(Some(label)));
-    bx.set_property("name", "entry");
+    bx.set_property("name", css_id);
     bx
 }
 

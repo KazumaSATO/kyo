@@ -4,49 +4,64 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::path::Path;
 use std::process::Command as Cmd;
-
-#[derive(PartialEq, Debug)]
+#[derive(Debug)]
 pub struct Config {
     sleep: Command,
     poweroff: Command,
     lock: Command,
 }
-
-#[derive(PartialEq, Debug)]
-pub struct Command {
+#[derive(Debug)]
+struct Command {
     command: String,
-    icon: Option<String>,
+    //icon: Option<String>,
+}
+
+impl ConfigFile {
+    fn none() -> ConfigFile {
+        ConfigFile {
+            sleep: None,
+            lock: None,
+            poweroff: None,
+        }
+    }
 }
 
 pub fn load_config(option: Option<&Path>) -> Config {
     let toml_str = match option {
-        Some(path) => read_file(&path),
+        Some(path) => Some(read_file(&path)),
         None => {
             let home = std::env::var("HOME").expect("HOME was not set.");
             let path = Path::new(&home).join(".config/kanami/config.toml");
             if path.exists() {
-                read_file(&path)
+                Some(read_file(&path))
             } else {
                 let shared_config = Path::new("/etc/kanami/config.toml");
-                read_file(&shared_config)
+                if shared_config.exists() {
+                    Some(read_file(&shared_config))
+                } else {
+                    None
+                }
             }
         }
     };
-    let config: ConfigFile = toml::from_str(toml_str.as_str()).unwrap();
+    let config = match toml_str {
+        Some(s) => toml::from_str(s.as_str()).unwrap(),
+        None => ConfigFile::none(),
+    };
     interpret_config(config)
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 struct ConfigFile {
     sleep: Option<RawCommand>,
     lock: Option<RawCommand>,
     poweroff: Option<RawCommand>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 struct RawCommand {
     command: Option<String>,
-    icon: Option<String>,
+    //    icon: Option<String>,
 }
 
 /// Read a text file at `path`.
@@ -65,11 +80,11 @@ fn as_command(default_command: &str, raw: Option<RawCommand>) -> Command {
     match raw {
         Some(raw_command) => Command {
             command: raw_command.command.unwrap_or(String::from(default_command)),
-            icon: raw_command.icon,
+            //      icon: raw_command.icon,
         },
         None => Command {
             command: String::from(default_command),
-            icon: None,
+            //    icon: None,
         },
     }
 }
