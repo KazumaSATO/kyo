@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::path::Path;
-use std::process::{Command as Cmd, Output};
+use std::process::Command as Cmd;
 
 #[derive(PartialEq, Debug)]
 pub struct Config {
@@ -86,8 +86,12 @@ impl Config {
     pub fn run_lock(&self) {
         self.run(&self.lock.command)
     }
-    pub fn run_sleep(&self) {}
-    pub fn run_poweroff(&self) {}
+    pub fn run_sleep(&self) {
+        self.run(&self.sleep.command)
+    }
+    pub fn run_poweroff(&self) {
+        self.run(&self.poweroff.command)
+    }
 
     fn run(&self, command: &String) {
         Cmd::new("sh")
@@ -97,26 +101,3 @@ impl Config {
             .expect("failed to execute process");
     }
 }
-
-// #[test]
-// fn test_parse_config_file() {
-//     let config = ConfigFile {
-//         commands: ConfigFileCommands {
-//             sleep: Some(String::from("loginctl   suspend")),
-//             poweroff: Some(String::from("loginctl poweroff")),
-//             lock: Some(String::from("swaylock")),
-//         },
-//     };
-
-//     let res = interpret_commands(&config);
-
-//     assert_eq!(
-//         Commands {
-//             sleep: vec![String::from("loginctl"), String::from("suspend")],
-//             poweroff: vec![String::from("loginctl"), String::from("poweroff")],
-//             lock: vec![String::from("swaylock")],
-//         },
-//         res,
-//         "The consecutive spaces must be removed."
-//     );
-// }
