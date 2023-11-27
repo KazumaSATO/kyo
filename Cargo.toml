@@ -15,8 +15,6 @@ exclude = [
   "config.toml"
 ]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 gtk4 = {version="0.7.3", features=["v4_10"]}
 gdk4 = {version="0.7.3", features=["v4_10"]}
