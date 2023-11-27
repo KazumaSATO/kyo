@@ -12,7 +12,8 @@ keywords = ["sway", "powermenu"]
 exclude = [
   "README.md",
   "style.css",
-  "config.toml"
+  "config.toml",
+  "screenshot.png"
 ]
 
 [dependencies]
