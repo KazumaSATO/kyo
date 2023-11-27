@@ -7,11 +7,11 @@ pub mod config;
 pub mod style;
 pub mod ui;
 
-fn main() {
+fn main() -> glib::ExitCode {
     let app = Application::builder()
         .application_id("dev.nryotaro.kanami")
         .build();
     app.connect_startup(|_| load_css(&None));
     app.connect_activate(|app| ui::build_ui(&app, read_config(None as Option<&String>)));
-    app.run();
+    app.run()
 }
