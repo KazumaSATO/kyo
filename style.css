@@ -1,0 +1,26 @@
+list {
+    background-color:#1e1e2eaa;
+}
+window {
+    background-color: transparent;
+}
+row {
+    padding: 8px;
+    outline: 0 solid transparent;
+}
+#lock label {
+    color: #b4befe;
+}
+#sleep label {
+    color: #f2cdcd;
+}
+#poweroff label {
+    color: #f38ba8;
+}
+
+row:focus {
+    background-color: #9399b2aa;
+}
+row:hover {
+    background-color: #9399b2aa;
+}

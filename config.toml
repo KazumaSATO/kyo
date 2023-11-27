@@ -1,0 +1,12 @@
+[lock]
+command = "swaylock"
+[lock.icon]
+color="#b4befe"
+[sleep]
+command = "loginctl suspend"
+[sleep.icon]
+color= "#f2cdcd"
+[poweroff]
+command = "loginctl poweroff"
+[poweroff.icon]
+color="#f38ba8"

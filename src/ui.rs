@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::config::{Commands, Config};
 use gdk4::Texture;
 use gio::ActionEntry;
 use gtk4::glib::Bytes;
@@ -44,13 +44,28 @@ fn build_window(app: &Application) -> ApplicationWindow {
 
 fn build_list(config: Config) -> ListBox {
     let list_box = ListBox::builder().name("list").build();
-    let models = vec![
-        ("Lock", include_str!("lock.svg"), "lock"),
-        ("Sleep", include_str!("sleep.svg"), "sleep"),
-        ("Poweroff", include_str!("poweroff.svg"), "poweroff"),
+    let properties = vec![
+        (
+            "Lock",
+            include_str!("lock.svg"),
+            "lock",
+            config.get_color(&Commands::LOCK),
+        ),
+        (
+            "Sleep",
+            include_str!("sleep.svg"),
+            "sleep",
+            config.get_color(&Commands::SLEEP),
+        ),
+        (
+            "Poweroff",
+            include_str!("poweroff.svg"),
+            "poweroff",
+            config.get_color(&Commands::POWEROFF),
+        ),
     ];
-    for (label, icon, css_id) in models {
-        list_box.append(&build_entry(label, icon, css_id));
+    for (label, icon, css_id, color) in properties {
+        list_box.append(&build_entry(label, icon, css_id, color));
     }
     let shortcut_controller = ShortcutController::new();
     for (key, direction) in [
@@ -63,9 +78,9 @@ fn build_list(config: Config) -> ListBox {
 
     list_box.connect_row_activated(move |list_box, row| {
         match row.index() {
-            0 => config.run_lock(),
-            1 => config.run_sleep(),
-            2 => config.run_poweroff(),
+            0 => config.run(&Commands::LOCK),
+            1 => config.run(&Commands::SLEEP),
+            2 => config.run(&Commands::POWEROFF),
             _ => (),
         }
         list_box.activate_action("win.close", None).unwrap();
@@ -73,9 +88,9 @@ fn build_list(config: Config) -> ListBox {
     list_box
 }
 
-fn build_entry(label: &str, icon: &str, css_id: &str) -> gtk4::Box {
+fn build_entry(label: &str, icon: &str, css_id: &str, color: &str) -> gtk4::Box {
     let bx = gtk4::Box::new(Orientation::Horizontal, 16);
-    let bytes = Bytes::from(icon.as_bytes());
+    let bytes = Bytes::from(icon.replace("#ffffff", color).as_bytes());
     let texture = Texture::from_bytes(&bytes).unwrap();
     let image = Image::from_paintable(Some(&texture));
     image.set_pixel_size(24);

@@ -12,6 +12,6 @@ fn main() {
         .application_id("dev.nryotaro.kanami")
         .build();
     app.connect_startup(|_| load_css(&None));
-    app.connect_activate(|app| ui::build_ui(&app, read_config(None as Option<String>)));
+    app.connect_activate(|app| ui::build_ui(&app, read_config(None as Option<&String>)));
     app.run();
 }
