@@ -10,7 +10,7 @@ documentation = "https://github.com/nryotaro/kanami"
 repository = "https://github.com/nryotaro/kanami"
 keywords = ["sway", "powermenu"]
 exclude = [
-  "readme.md",
+  "README.md",
   "style.css",
   "config.toml"
 ]
