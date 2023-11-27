@@ -10,7 +10,7 @@ use gtk4::{
 
 use gtk4_layer_shell::{KeyboardMode, Layer, LayerShell};
 
-pub fn build_ui(app: &Application, config: Config) {
+pub(crate) fn build_ui(app: &Application, config: Config) {
     let window = build_window(app);
     let list_box = build_list(config);
     window.set_child(Some(&list_box));
@@ -73,7 +73,6 @@ fn build_list(config: Config) -> ListBox {
     list_box
 }
 
-//fn build_entry(label: &str, icon: &str) -> gtk4::ListBoxRow {
 fn build_entry(label: &str, icon: &str, css_id: &str) -> gtk4::Box {
     let bx = gtk4::Box::new(Orientation::Horizontal, 16);
     let bytes = Bytes::from(icon.as_bytes());

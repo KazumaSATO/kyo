@@ -3,7 +3,7 @@ use gtk4::CssProvider;
 use std::env;
 use std::path::Path;
 
-pub fn load_css(option: &Option<String>) {
+pub(crate) fn load_css(option: &Option<String>) {
     let provider = CssProvider::new();
     match option {
         Some(actual) => provider.load_from_path(actual),
