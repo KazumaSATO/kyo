@@ -21,9 +21,9 @@ pub(crate) enum Commands {
 impl Config {
     pub(crate) fn run(&self, command: &Commands) {
         match command {
-            Commands::LOCK => self.call_shell(&self.sleep.command),
+            Commands::LOCK => self.call_shell(&self.lock.command),
             Commands::SLEEP => self.call_shell(&self.sleep.command),
-            Commands::POWEROFF => self.call_shell(&self.sleep.command),
+            Commands::POWEROFF => self.call_shell(&self.poweroff.command),
         };
     }
     pub(crate) fn get_color(&self, command: &Commands) -> &String {
